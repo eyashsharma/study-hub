@@ -2,6 +2,7 @@ import readline from 'node:readline';
 import { TelegramClient, StringSession } from 'telegram';
 import 'dotenv/config';
 
+
 const { TELEGRAM_API_ID, TELEGRAM_API_HASH } = process.env;
 if (!TELEGRAM_API_ID || !TELEGRAM_API_HASH) {
   console.error('Set TELEGRAM_API_ID and TELEGRAM_API_HASH in .env first (from https://my.telegram.org).');
