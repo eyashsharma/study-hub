@@ -1,7 +1,8 @@
 import readline from 'node:readline';
-import { TelegramClient, StringSession } from 'telegram';
+import { TelegramClient, sessions } from 'telegram';
 import 'dotenv/config';
 
+const { StringSession } = sessions;
 
 const { TELEGRAM_API_ID, TELEGRAM_API_HASH } = process.env;
 if (!TELEGRAM_API_ID || !TELEGRAM_API_HASH) {
