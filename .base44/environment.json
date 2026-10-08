@@ -1,0 +1,36 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/health",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "TELEGRAM_API_ID",
+      "description": "Telegram API ID from https://my.telegram.org (API development tools section)",
+      "requiredAtBoot": true,
+      "generatedForDevelopment": true
+    },
+    {
+      "name": "TELEGRAM_API_HASH",
+      "description": "Telegram API hash from https://my.telegram.org (API development tools section)",
+      "requiredAtBoot": true,
+      "generatedForDevelopment": true
+    },
+    {
+      "name": "STREAM_TOKEN",
+      "description": "Arbitrary secret token used to authenticate requests to the streaming API. Set any random string.",
+      "requiredAtBoot": true,
+      "generatedForDevelopment": true
+    },
+    {
+      "name": "SESSION_STRING",
+      "description": "GramJS StringSession from running `npm run login` interactively. Required unless TELEGRAM_BOT_TOKEN is provided.",
+      "requiredAtBoot": true,
+      "generatedForDevelopment": true
+    },
+    {
+      "name": "TELEGRAM_BOT_TOKEN",
+      "description": "Bot token from @BotFather on Telegram. Alternative to SESSION_STRING for client auth.",
+      "requiredAtBoot": false
+    }
+  ]
+}
