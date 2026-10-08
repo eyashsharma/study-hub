@@ -2,7 +2,8 @@ import http from 'node:http';
 import telegram from 'telegram';
 import 'dotenv/config';
 
-const { TelegramClient, Api, StringSession } = telegram;
+const { TelegramClient, Api, sessions } = telegram;
+const { StringSession } = sessions;
 
 const {
   TELEGRAM_API_ID,
