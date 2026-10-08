@@ -1,9 +1,8 @@
+import http from 'node:http';
 import telegram from 'telegram';
+import 'dotenv/config';
 
 const { TelegramClient, Api, StringSession } = telegram;
-import http from 'node:http';
-import { TelegramClient, Api, StringSession } from 'telegram';
-import 'dotenv/config';
 
 const {
   TELEGRAM_API_ID,
