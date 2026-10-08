@@ -24,5 +24,10 @@ All delivered via `/run/base44/app.env` (platform-managed secrets):
 - `GET /stream?channel=<ref>&msg=<id>&size=<bytes>&token=<token>` → streams video bytes with Range support
 
 ## Notes
-- The app calls `initClient()` (Telegram connection) **before** starting the HTTP server, so it will crash on startup with invalid/placeholder Telegram credentials. Real credentials are required for the server to listen.
+- The app calls `initClient()` (Telegram connection) **before** starting the HTTP server on normal startup, so it will crash/hang if the Telegram connection cannot be established. Real credentials are required for the server to listen.
 - `login.js` is an interactive one-time script to generate `SESSION_STRING` — cannot be run in the sandbox.
+
+## Sandbox override (`BASE44_PREVIEW_MODE`)
+- The Base44 sandbox egress proxy only allows HTTP/HTTPS. Telegram's MTProto protocol needs a **raw TCP/TLS connection to Telegram's DCs**, which the sandbox blocks (raw connects open but no data flows, and WebSocket upgrades to `*.web.telegram.org` don't complete). Confirmed via in-container probes.
+- To keep the HTTP server serving (and the Compose healthcheck green) under the preview, `index.js` checks `process.env.BASE44_PREVIEW_MODE === '1'`: when set it calls `listen()` immediately and connects to Telegram in the background; when unset/any other value the original order (`await initClient()` then `listen()`) is preserved.
+- This override only changes **startup ordering** — it does not bypass auth/TLS and does not make MTProto work in the sandbox. Consequence: in the sandbox the API is up and `/health` responds, but Telegram-backed routes (`/videos`, `/stream`) fail because the client can't connect. Deploy to a host with unrestricted outbound TCP for full functionality.

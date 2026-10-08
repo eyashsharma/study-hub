@@ -289,7 +289,21 @@ const server = http.createServer((req, res) => {
   res.end('Not found');
 });
 
-await initClient();
-server.listen(PORT, () => {
-  console.log(`StudyHub MTProto streamer listening on :${PORT}`);
-});
+const listen = () =>
+  server.listen(PORT, () => {
+    console.log(`StudyHub MTProto streamer listening on :${PORT}`);
+  });
+
+// Sandbox preview only (BASE44_PREVIEW_MODE === '1'): the preview egress proxy cannot
+// reach Telegram's MTProto servers (raw TCP/TLS is blocked), so awaiting the client here
+// would leave the HTTP server never listening. Start serving immediately and connect in
+// the background. When the flag is unset, behaviour is unchanged (connect first, then listen).
+if (process.env.BASE44_PREVIEW_MODE === '1') {
+  listen();
+  initClient().catch((e) => {
+    console.error('Telegram client unavailable (HTTP server still running):', e && e.message);
+  });
+} else {
+  await initClient();
+  listen();
+}
